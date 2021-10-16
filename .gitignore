@@ -1,0 +1,6 @@
+config.py
+/downloads
+compress-pdf-tg-bot.session
+venv
+.idea
+__pycache__

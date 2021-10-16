@@ -1,0 +1,25 @@
+{
+  "name": "compress-pdf-tg-bot",
+  "description": "pdf size compressing telegram robot. Make your forks now",
+  "keywords": ["telegram", "pdf", "size", "compressor", "robot"],
+  "logo": "https://veryutils.com/image/cache/mpseller/customer-5/pdf-compress-logo-500x500.png",
+  "website": "https://github.com/m4mallu/compress-pdf-tg-bot",
+  "repository": "https://github.com/m4mallu/compress-pdf-tg-bot",
+  "env": {
+        "APP_ID": {"description": "Get this value from https://my.telegram.org", "required": true},
+        "API_HASH": {"description": "Get this value from https://my.telegram.org" , "required": true},
+        "TG_BOT_TOKEN": {"description": "Get Bot Token From @BotFather Bot", "required": true},
+        "ENV": {"description": "Set this to ANYTHING","value": "ANYTHING"}
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
+  }
+}
