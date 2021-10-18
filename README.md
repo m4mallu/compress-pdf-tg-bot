@@ -1,6 +1,6 @@
 # [Pdf Compressor Telegram Bot](https://github.com/m4mallu)
 
-##About : 
+## About : 
 ### A simple pdf size compressing telegram robot witten in python. Mostly useful for digital documentation.
 
 ## Deploy to Heroku:
