@@ -13,7 +13,7 @@ from support.display_progress import progress_for_pyrogram
 @Client.on_message(filters.private & filters.document)
 async def compress_pdf(c, m: Message):
     msg = await m.reply_text(Presets.WAIT_MESSAGE, reply_to_message_id=m.message_id)
-    if not str(m.document.file_name).endswith('.pdf'):
+    if not str(m.document.file_name).lower().endswith('.pdf'):
         await msg.edit(Presets.INVALID_FORMAT, reply_markup=close_button)
         return
     #
@@ -49,7 +49,6 @@ async def compress_pdf(c, m: Message):
     # Let's find out the initial document size
     size_path = await get_size(dl_location)
     initial_size = size_path[0]
-    initial_value = float(str(initial_size).split(' ')[0])
     #
     try:
         """
@@ -72,7 +71,6 @@ async def compress_pdf(c, m: Message):
     # Let's find out the compressed document file size
     size_path = await get_size(dl_location)
     compressed_size = size_path[0]
-    compressed_value = float(str(compressed_size).split(' ')[0])
     #
     await asyncio.sleep(2)
     message = await msg.edit(Presets.UPLOAD_MSG)
