@@ -5,19 +5,19 @@ from presets import Presets
 from pyrogram.types import Message
 from pyrogram import Client, filters
 from support.file_size import get_size
-from PDFNetPython3.PDFNetPython import *
 from support.markups import close_button
 from support.display_progress import progress_for_pyrogram
+from PDFNetPython3.PDFNetPython import PDFNet, PDFDoc, Optimizer, SDFDoc
 
 
 @Client.on_message(filters.private & filters.document)
-async def compress_pdf(c, m: Message):
+async def compress_pdf(_, m: Message):
     msg = await m.reply_text(Presets.WAIT_MESSAGE, reply_to_message_id=m.message_id)
-    if not str(m.document.file_name).endswith('.pdf'):
+    if not str(m.document.file_name).endswith(".pdf"):
         await msg.edit(Presets.INVALID_FORMAT, reply_markup=close_button)
         return
     #
-    dl_location = os.getcwd() + '/' + "downloads" + '/' + str(m.from_user.id) + '/'
+    dl_location = os.getcwd() + "/" + "downloads" + "/" + str(m.from_user.id) + "/"
     if not os.path.isdir(dl_location):
         os.makedirs(dl_location)
     else:
@@ -33,11 +33,7 @@ async def compress_pdf(c, m: Message):
     await m.download(
         file_name=dl_location,
         progress=progress_for_pyrogram,
-        progress_args=(
-            Presets.DOWNLOAD_MSG,
-            msg,
-            current_time
-        )
+        progress_args=(Presets.DOWNLOAD_MSG, msg, current_time),
     )
     #
     await asyncio.sleep(1)
@@ -47,14 +43,14 @@ async def compress_pdf(c, m: Message):
     await asyncio.sleep(2)
     #
     # Let's find out the initial document size
-    size_path = await get_size(dl_location)
+    size_path = get_size(dl_location)
     initial_size = size_path[0]
-    initial_value = float(str(initial_size).split(' ')[0])
+    initial_value = float(str(initial_size).split(" ")[0])
     #
     try:
         """
-            I have used PDFNetPython3 package which found to be a better one to compress the pdf documents using python.
-            Link: https://www.thepythoncode.com/article/compress-pdf-files-in-python
+        I have used PDFNetPython3 package which found to be a better one to compress the pdf documents using python.
+        Link: https://www.thepythoncode.com/article/compress-pdf-files-in-python
         """
         # Initialize the library
         PDFNet.Initialize()
@@ -70,9 +66,9 @@ async def compress_pdf(c, m: Message):
         return
     #
     # Let's find out the compressed document file size
-    size_path = await get_size(dl_location)
+    size_path = get_size(dl_location)
     compressed_size = size_path[0]
-    compressed_value = float(str(compressed_size).split(' ')[0])
+    compressed_value = float(str(compressed_size).split(" ")[0])
     #
     await asyncio.sleep(2)
     message = await msg.edit(Presets.UPLOAD_MSG)
@@ -81,14 +77,9 @@ async def compress_pdf(c, m: Message):
     await m.reply_document(
         document=size_path[1],
         reply_to_message_id=m.message_id,
-        caption=m.caption if m.caption else '',
+        caption=m.caption if m.caption else "",
         progress=progress_for_pyrogram,
-        progress_args=(
-            Presets.UPLOAD_MSG,
-            message,
-            current_time
-        )
-
+        progress_args=(Presets.UPLOAD_MSG, message, current_time),
     )
     #
     try:
@@ -96,7 +87,8 @@ async def compress_pdf(c, m: Message):
     except Exception:
         pass
     #
-    await msg.edit(Presets.FINISHED_JOB.format(initial_size, compressed_size),
-                   disable_web_page_preview=True,
-                   reply_markup=close_button
-                   )
+    await msg.edit(
+        Presets.FINISHED_JOB.format(initial_size, compressed_size),
+        disable_web_page_preview=True,
+        reply_markup=close_button,
+    )
